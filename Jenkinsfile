@@ -38,6 +38,12 @@ pipeline {
                                 npm test
                             '''
                             }
+                        post {
+                            always {
+                                junit 'jest-results/junit.xml'
+                            }
+                        }
+
                         }
 
                     stage('E2E') {
@@ -57,16 +63,16 @@ pipeline {
                                 npx playwright test
                             '''
                         }
+                        post {
+                            always {
+                                publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'PW HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                            }
+                        }
                     }
             }
         }
         
     }
 
-    post {
-        always {
-            junit 'jest-results/junit.xml'
-            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'PW HTML Report', reportTitles: '', useWrapperFileDirectly: true])
-        }
-    }
+    
 }
