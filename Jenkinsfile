@@ -82,16 +82,16 @@ pipeline {
 
         stage('Staging Deploy') {   
 
-            environment {
-                            CI_ENVIRONMENT_URL = 'STAGING_URL_TO_BE_DEFINED'
-                    }
-
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
                     reuseNode true
                 }
             }
+
+            environment {
+                            CI_ENVIRONMENT_URL = 'STAGING_URL_TO_BE_DEFINED'
+                    }
 
             steps {
                 sh '''
