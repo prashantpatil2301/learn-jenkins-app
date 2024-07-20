@@ -53,6 +53,10 @@ pipeline {
                         }
 
                     stage('E2E') {
+                        environment {
+                            CI_ENVIRONMENT_URL = 'https://musical-queijadas-7f7ff4.netlify.app'
+                        }
+
                         agent {
                             docker {
                                 image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
@@ -93,6 +97,27 @@ pipeline {
                     node_modules/.bin/netlify status
                     node_modules/.bin/netlify deploy --dir=build --prod
                 '''
+            }
+        }
+
+        stage('Prod E2E') {
+
+            agent {
+                docker {
+                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                    reuseNode true
+                }
+            }
+
+            steps {
+                sh '''
+                    npx playwright test --reporter=html
+                '''
+            }
+            post {
+                always {
+                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Prod HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                }
             }
         }
 
