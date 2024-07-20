@@ -39,6 +39,7 @@ pipeline {
 
                         steps {
                             sh '''
+                                echo 'for polling this change is introduced'
                                 #test -f build/index.html
                                 npm test
                             '''
