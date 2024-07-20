@@ -53,9 +53,6 @@ pipeline {
                         }
 
                     stage('E2E') {
-                        environment {
-                            CI_ENVIRONMENT_URL = 'https://musical-queijadas-7f7ff4.netlify.app'
-                        }
 
                         agent {
                             docker {
@@ -101,7 +98,10 @@ pipeline {
         }
 
         stage('Prod E2E') {
-
+            environment {
+                            CI_ENVIRONMENT_URL = 'https://musical-queijadas-7f7ff4.netlify.app'
+                    }
+                    
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
