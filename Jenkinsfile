@@ -98,8 +98,10 @@ pipeline {
         }
 
         stage('Approval'){
-            timeout(time: 1, unit: 'MINUTES') {
-                input message: 'Sure about Deploy?', ok: 'Yes, We need to deploy'
+            steps{
+                timeout(time: 1, unit: 'MINUTES') {
+                    input message: 'Sure about Deploy?', ok: 'Yes, We need to deploy'
+                }
             }
         }
 
