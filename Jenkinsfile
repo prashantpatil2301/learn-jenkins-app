@@ -9,8 +9,8 @@ pipeline {
 
     stages {
 
-        stage('Docker'){
-            steps{
+        stage('Docker') {
+            steps {
                 sh 'docker build -t my-playwright .'
             }
         }
@@ -29,7 +29,6 @@ pipeline {
                     npm --version
                     npm ci
                     npm run build
-                    ls -la
                     ls -la
                 '''
             }
@@ -61,14 +60,13 @@ pipeline {
                 stage('E2E') {
                     agent {
                         docker {
-                            image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                            image 'my-playwright'
                             reuseNode true
                         }
                     }
 
                     steps {
                         sh '''
-                            npm install serve
                             serve -s build &
                             sleep 10
                             npx playwright test  --reporter=html
@@ -110,14 +108,6 @@ pipeline {
             post {
                 always {
                     publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Staging E2E', reportTitles: '', useWrapperFileDirectly: true])
-                }
-            }
-        }
-
-        stage('Approval') {
-            steps {
-                timeout(time: 15, unit: 'MINUTES') {
-                    input message: 'Do you wish to deploy to production?', ok: 'Yes, I am sure!'
                 }
             }
         }
